@@ -1,4 +1,6 @@
 import React, { useImperativeHandle } from 'react';
+import TodoList from './components/TodoList';
+import TodoForm from './components/TodoForm';
 
 class App extends React.Component {
   // you will need a place to store your state in this component.
@@ -58,61 +60,6 @@ class App extends React.Component {
         <TodoForm handleAdd={this.handleAdd} handleClearCompleted={this.handleClearCompleted}/>
       </div>
     );
-  }
-}
-
-
-
-
-
-const TodoList = props => {
-  return props.todos.map(item => <Todo item={item} handleToggle={props.handleToggle}/>);
-}
-
-
-
-
-const Todo = props => {
-  return (
-    <div onClick={props.handleToggle}>
-      {props.item.completed ? <strike>{props.item.task}</strike> : <p>{props.item.task}</p>}
-    </div>
-  )
-}
-
-
-
-
-class TodoForm extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      textInput: ""
-    }
-  }
-
-  handleText = e => {
-    this.setState({
-      textInput: e.target.value
-    });
-  }
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.handleAdd(this.state.textInput);  
-    this.setState({textInput: ""});
-  }
-
-  render() {
-    return (
-      <div>
-        <form onSubmit={e => e.preventDefault()}>
-          <input value={this.state.textInput} onChange={this.handleText} type="text" name="item"></input>
-          <button onClick={this.handleSubmit} type="submit">Add Todo</button>
-          <button onClick={this.props.handleClearCompleted}>Clear Completed</button>
-        </form>
-      </div>
-    )
   }
 }
 
