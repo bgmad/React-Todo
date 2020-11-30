@@ -16,8 +16,10 @@ export default class TodoForm extends React.Component {
   
     handleSubmit = e => {
       e.preventDefault();
-      this.props.handleAdd(this.state.textInput);  
-      this.setState({textInput: ""});
+      if(this.state.textInput !== ""){
+          this.props.handleAdd(this.state.textInput);  
+          this.setState({textInput: ""});
+      }
     }
   
     render() {
