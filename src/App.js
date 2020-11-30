@@ -28,7 +28,7 @@ class App extends React.Component {
     });
   }
 
-  handleComplete = e => {
+  handleToggle = e => {
     console.log(this.state);
     this.setState({
       todos: this.state.todos.map(item => {
@@ -44,12 +44,18 @@ class App extends React.Component {
     });
   }
 
+  handleClearCompleted = e => {
+    this.setState({
+      todos: [...this.state.todos.filter(item => !item.completed)]
+    })
+  }
+
   render() {
     return (
       <div>
         <h2>Welcome to your Todo App!</h2>
-        <TodoList todos={this.state.todos} handleComplete={this.handleComplete}/>
-        <TodoForm handleAdd={this.handleAdd}/>
+        <TodoList todos={this.state.todos} handleToggle={this.handleToggle}/>
+        <TodoForm handleAdd={this.handleAdd} handleClearCompleted={this.handleClearCompleted}/>
       </div>
     );
   }
@@ -60,7 +66,7 @@ class App extends React.Component {
 
 
 const TodoList = props => {
-  return props.todos.map(item => <Todo item={item} handleComplete={props.handleComplete}/>);
+  return props.todos.map(item => <Todo item={item} handleToggle={props.handleToggle}/>);
 }
 
 
@@ -68,7 +74,7 @@ const TodoList = props => {
 
 const Todo = props => {
   return (
-    <div onClick={props.handleComplete}>
+    <div onClick={props.handleToggle}>
       {props.item.completed ? <strike>{props.item.task}</strike> : <p>{props.item.task}</p>}
     </div>
   )
@@ -103,7 +109,7 @@ class TodoForm extends React.Component {
         <form onSubmit={e => e.preventDefault()}>
           <input value={this.state.textInput} onChange={this.handleText} type="text" name="item"></input>
           <button onClick={this.handleSubmit} type="submit">Add Todo</button>
-          <button>Clear Completed</button>
+          <button onClick={this.props.handleClearCompleted}>Clear Completed</button>
         </form>
       </div>
     )
