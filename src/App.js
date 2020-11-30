@@ -30,11 +30,10 @@ class App extends React.Component {
     });
   }
 
-  handleToggle = e => {
-    console.log(this.state);
+  handleToggle = itemId => {
     this.setState({
       todos: this.state.todos.map(item => {
-        if (e.target.textContent === item.task) {
+        if (itemId === item.id) {
           return ({
             ...item,
             completed: !item.completed
