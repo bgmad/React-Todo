@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 
 class App extends React.Component {
   // you will need a place to store your state in this component.
@@ -21,27 +21,93 @@ class App extends React.Component {
       }
     ]}
   }
+
+  handleAdd = name => {
+    this.setState({
+      todos: [...this.state.todos, {task: name, id: Date.now(), completed: false}]
+    });
+  }
+
+  handleComplete = e => {
+    console.log(this.state);
+    this.setState({
+      todos: this.state.todos.map(item => {
+        if (e.target.textContent === item.task) {
+          return ({
+            ...item,
+            completed: !item.completed
+          });
+        } else {
+          return (item);
+        }
+      })
+    });
+  }
+
   render() {
     return (
       <div>
         <h2>Welcome to your Todo App!</h2>
-        <TodoList todos={this.state.todos}/>
+        <TodoList todos={this.state.todos} handleComplete={this.handleComplete}/>
+        <TodoForm handleAdd={this.handleAdd}/>
       </div>
     );
   }
 }
 
+
+
+
+
 const TodoList = props => {
-  return props.todos.map(item => <Todo item={item}/>);
+  return props.todos.map(item => <Todo item={item} handleComplete={props.handleComplete}/>);
 }
 
+
+
+
 const Todo = props => {
-  console.log(props)
   return (
-    <div>
-      {props.item.task}
+    <div onClick={props.handleComplete}>
+      {props.item.completed ? <strike>{props.item.task}</strike> : <p>{props.item.task}</p>}
     </div>
   )
+}
+
+
+
+
+class TodoForm extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      textInput: ""
+    }
+  }
+
+  handleText = e => {
+    this.setState({
+      textInput: e.target.value
+    });
+  }
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.handleAdd(this.state.textInput);  
+    this.setState({textInput: ""});
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={e => e.preventDefault()}>
+          <input value={this.state.textInput} onChange={this.handleText} type="text" name="item"></input>
+          <button onClick={this.handleSubmit} type="submit">Add Todo</button>
+          <button>Clear Completed</button>
+        </form>
+      </div>
+    )
+  }
 }
 
 export default App;
